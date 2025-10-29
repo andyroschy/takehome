@@ -1,7 +1,15 @@
-"use client";
+import prisma from "@/lib/db";
+import { connection } from "next/server";
 import { ReactNode } from "react";
 
-export function SideBar({ users }: { users: User[] }) {
+export async function SideBar() {
+  await connection();
+  const users = await prisma.user.findMany({
+    select: {
+      name: true,
+      id: true,
+    },
+  });
   return (
     <aside>
       <ul>
