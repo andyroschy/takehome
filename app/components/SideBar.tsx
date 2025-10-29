@@ -1,4 +1,5 @@
 import prisma from "@/lib/db";
+import Link from "next/link";
 import { connection } from "next/server";
 import { ReactNode } from "react";
 
@@ -13,8 +14,8 @@ export async function SideBar() {
   return (
     <aside>
       <ul>
-        <SideBarNavigation name="Home" icon={"h"} />
-        <SideBarNavigation name="Shifts" icon={"h"} />
+        <SideBarNavigation name="Home" icon={"h"} url="/" />
+        <SideBarNavigation name="Shifts" icon={"h"} url="/shifts" />
         <SideBarNavigation name="Message" icon={"h"} />
         <SideBarNavigation name="Account" icon={"h"} />
       </ul>
@@ -23,11 +24,11 @@ export async function SideBar() {
   );
 }
 
-function SideBarNavigation({ name, icon }: { name: string; icon: ReactNode }) {
+function SideBarNavigation({ name, icon, url }: { name: string; icon: ReactNode, url?: string }) {
   return (
     <li>
       <span>{icon}</span>
-      {name}
+      {url ? <Link href={url}>{name}</Link> : name}
     </li>
   );
 }
