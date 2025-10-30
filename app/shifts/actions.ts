@@ -9,6 +9,8 @@ export async function applyToShift(shiftId: string): Promise<Maybe<string>> {
   const userId = getCurrentUserId();
 
   try {
+    // SINCE WE ARE USING UPSERT THERE'S NO NEED TO VALIDATE IF USER ALREADY APPLIED TO SHIFT
+    // DUPLICATE APPLICATION WILL SIMPLY UPDATE THE TIMESTAMP
     await prisma.application.upsert({
       create: {
         shiftId,
@@ -60,10 +62,40 @@ export async function withdrawFromShift(
   }
 }
 
-export async function getAvailableShifts(): Promise<
-  Result<ShiftSummary[], string>
-> {
+export type OrdinalFilter<T extends number | Date> = {
+  operator: "gt" | "lt" | "equals";
+  value: T;
+};
+
+type SortOption<T, K extends keyof T> = {
+  field: K;
+  direction: "asc" | "desc";
+};
+
+export async function getAvailableShifts(
+  filter: {
+    status?: "OPEN" | "CANCELLED";
+    rate?: OrdinalFilter<number>;
+    date?: OrdinalFilter<Date>;
+  } = {},
+  sort: SortOption<ShiftSummary, "hourlyRateCents" | "status"> | undefined = undefined
+): Promise<Result<ShiftSummary[], string>> {
   const userId: string = getCurrentUserId();
+
+  const rateFilter = filter.rate
+    ? {
+        [filter.rate.operator]: filter.rate.value,
+      }
+    : undefined;
+
+  const dateFilter = filter.date
+    ? {
+        [filter.date.operator]: filter.date.value,
+      }
+    : undefined;
+
+  const orderBy = sort ? { [sort.field]: sort.direction } : undefined;
+
   const shifts = await prisma.shift.findMany({
     select: {
       id: true,
@@ -75,13 +107,16 @@ export async function getAvailableShifts(): Promise<
       applications: {
         where: {
           userId: userId,
-          status: 'APPLIED'
+          status: "APPLIED",
         },
       },
     },
     where: {
-      status: "OPEN",
+      status: filter.status ?? undefined,
+      hourlyRateCents: rateFilter,
+      startsAt: dateFilter,
     },
+    orderBy,
   });
   return {
     ok: true,
