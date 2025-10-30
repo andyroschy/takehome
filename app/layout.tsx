@@ -38,7 +38,7 @@ export default async function RootLayout({
         <ErrorBoundary>
           <div className="flex h-screen max-h-screen min-w-full items-center justify-center bg-zinc-50 font-sans ">
             <SideBar users={users} />
-            <main className="flex flex-1 h-screen max-h-screen overflow-auto min-h-screen  flex-col items-center justify-between py-32 px-16 bg-white sm:items-start">
+            <main className="flex flex-1 h-screen max-h-screen overflow-auto min-h-screen  flex-col items-center justify-between py-4 px-16 bg-white sm:items-start">
               {!!currentUserId ? (
                 children
               ) : (

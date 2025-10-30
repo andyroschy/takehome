@@ -31,6 +31,7 @@ export default async function Applications() {
           <Link href={"/shifts"}>shift</Link>
         </div>
       )}
+      <header className="text-center w-full text-6xl text-blue-800">My Applications</header>
       {applications.map(({ shift, status }) => (
         <article
           key={shift.id}

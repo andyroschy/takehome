@@ -92,7 +92,7 @@ export default async function Shifts({
 
   return (
     <>
-      <header className="text-center w-full text-6xl text-blue-800">Shifts</header>
+      <header className="text-center w-full text-6xl text-blue-800">Browse Shifts</header>
       <section className="flex flex-row flex-wrap ">
         {!shifts.length ? <div>There are no shifts availabe</div> : null}
         {shifts.map((x) => (
