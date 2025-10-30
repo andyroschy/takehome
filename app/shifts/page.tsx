@@ -1,6 +1,7 @@
 import { connection } from "next/server";
 import { Shift } from "./shift";
 import { getAvailableShifts, OrdinalFilter } from "./actions";
+import { QueryControls } from "./query-controls";
 
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 type ShiftFilter = UnwrapPromise<Parameters<typeof getAvailableShifts>[0]>;
@@ -93,6 +94,7 @@ export default async function Shifts({
   return (
     <>
       <header className="text-center w-full text-6xl text-blue-800">Browse Shifts</header>
+      <QueryControls />
       <section className="flex flex-row flex-wrap ">
         {!shifts.length ? <div>There are no shifts availabe</div> : null}
         {shifts.map((x) => (

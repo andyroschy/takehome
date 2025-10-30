@@ -6,6 +6,7 @@ import { CalendarIcon } from "@/app/icons/calendar";
 import { ClockIcon } from "@/app/icons/clock";
 import { formatDateAndHours, formatShiftTime } from "@/lib/dateUtils";
 import Link from "next/link";
+import { MoneyIcon } from "@/app/icons/money";
 
 export function ShiftDetail({
   shift,
@@ -21,7 +22,10 @@ export function ShiftDetail({
   } = useShiftActions(shift.id);
   return (
     <section className="w-full h-full max-w-full">
-      <Link className="text-left hover:underline text-blue-600 hover:text-blue-400" href={"/shifts"}>
+      <Link
+        className="text-left hover:underline text-blue-600 hover:text-blue-400"
+        href={"/shifts"}
+      >
         Go back
       </Link>
       <header className="text-6xl text-center text-blue-900">
@@ -41,6 +45,7 @@ export function ShiftDetail({
               <span>{shift.location}</span>
             </div>
           </dd>
+
           <dd className="items-center flex flex-row gap-2 mt-1">
             <CalendarIcon
               width={32}
@@ -57,6 +62,16 @@ export function ShiftDetail({
               className="bg-blue-100 rounded-2xl p-1"
             />
             {formatShiftTime(shift.startsAt, shift.endsAt)}
+          </dd>
+          <dd className="items-center flex flex-row text-lg gap-2">
+            <MoneyIcon
+              width={32}
+              height={32}
+              className="bg-blue-100 rounded-2xl p-1"
+            />
+            {/* For money related calculations a library like decimal.js should be used in a production application, 
+      to avoid rounding errors associted with floating point arithmetics. I'll leave it like this for simplicity's sake. */}
+            <span>${(shift.hourlyRateCents / 100).toFixed(2)}/hr</span>
           </dd>
         </dl>
       </article>
