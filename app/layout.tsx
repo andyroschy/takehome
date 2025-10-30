@@ -36,11 +36,15 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ErrorBoundary>
-          <SideBar users={users}  />
-          <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-            <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+          <div className="flex h-screen max-h-screen min-w-full items-center justify-center bg-zinc-50 font-sans ">
+            <SideBar users={users} />
+            <main className="flex flex-1 h-screen max-h-screen overflow-auto min-h-screen  flex-col items-center justify-between py-32 px-16 bg-white sm:items-start">
               <div>Signed In as: {currentUserId}</div>
-              {!!currentUserId ? children : <div>Please select a user to sign in.</div>}
+              {!!currentUserId ? (
+                children
+              ) : (
+                <div>Please select a user to sign in.</div>
+              )}
             </main>
           </div>
         </ErrorBoundary>
