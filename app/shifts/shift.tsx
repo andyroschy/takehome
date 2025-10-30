@@ -5,6 +5,7 @@ import { useShiftActions } from "./hooks";
 import { LocationIcon } from "../icons/location";
 import { CalendarIcon } from "../icons/calendar";
 import { ClockIcon } from "../icons/clock";
+import { formatDateAndHours, formatShiftTime } from "@/lib/dateUtils";
 
 export function Shift({
   shift,
@@ -47,8 +48,8 @@ export function Shift({
             height={32}
             className="bg-blue-100 rounded-2xl p-1"
           />
-          {shift.startsAt.toLocaleString()}
-          {shift.endsAt.toLocaleString()}
+
+          {formatDateAndHours(shift.startsAt, shift.endsAt)}
         </dd>
         <dd className="items-center flex flex-row gap-2 mt-1">
           <ClockIcon
@@ -56,8 +57,7 @@ export function Shift({
             height={32}
             className="bg-blue-100 rounded-2xl p-1"
           />
-          {shift.startsAt.toLocaleString()}
-          {shift.endsAt.toLocaleString()}
+          {formatShiftTime(shift.startsAt, shift.endsAt)}
         </dd>
       </dl>
       {applied ? (
