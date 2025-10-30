@@ -1,17 +1,28 @@
 "use client";
-import { Shift as ShiftModel } from "@/generated/prisma/client";
 import Link from "next/link";
+import { ShiftSummary } from "./types";
+import { useCallback, useState } from "react";
+import { applyToShift } from "./actions";
 
 export function Shift({
   shift,
   applied,
 }: {
-  shift: Pick<
-    ShiftModel,
-    "id" | "title" | "facilityName" | "hourlyRateCents" | "location" | "status"
-  >;
+  shift: ShiftSummary;
   applied: boolean;
 }) {
+  const [loading, setLoading] = useState(false);
+
+  const onApplyClick = useCallback(async () => {
+    setLoading(true);
+    const respone = await applyToShift(shift.id);
+    if (!respone.ok) {
+      // in a real application this would be a toast notifiaction or somethig
+      alert("Failed to apply to shift: " + respone.error);
+    }
+    setLoading(false);
+  }, [shift.id]);
+
   return (
     <div>
       <Link href={`shifts/${shift.id}`}>
@@ -34,8 +45,9 @@ export function Shift({
       {applied ? <span>Already applied!</span> : null}
       {!applied ? (
         <button
+          disabled={loading}
           className="border border-white rounded-xl cursor-pointer"
-          onClick={() => alert("applied!")}
+          onClick={onApplyClick}
         >
           Apply
         </button>
