@@ -1,15 +1,16 @@
 "use client";
 import Link from "next/link";
-import { ReactNode, useCallback } from "react";
+import { act, ReactNode, useCallback } from "react";
 import { setUser } from "../actions/session";
 import { HomeIcon } from "../icons/home";
 import { CalendarIcon } from "../icons/calendar";
 import { ListIcon } from "../icons/list";
+import { useSelectedLayoutSegments } from "next/navigation";
 
 export function SideBar({ users }: { users: User[] }) {
   return (
-    <aside className="flex flex-col content-start w-48 p-4 h-full min-h-full">
-      <ul className="flex-1">
+    <aside className="flex flex-col border-r border-blue-500 content-start w-48 p-4 h-full min-h-full">
+      <nav className="flex-1 flex flex-col">
         <SideBarNavigation
           name="Home"
           icon={<HomeIcon height={16} width={16} className="inline" />}
@@ -25,7 +26,7 @@ export function SideBar({ users }: { users: User[] }) {
           icon={<ListIcon height={16} width={16} className="inline" />}
           url="/applications"
         />
-      </ul>
+      </nav>
       <UserSelect users={users} />
     </aside>
   );
@@ -38,19 +39,21 @@ function SideBarNavigation({
 }: {
   name: string;
   icon: ReactNode;
-  url?: string;
+  url: string;
 }) {
+  const layoutSegments = useSelectedLayoutSegments();
+  // naive implementation, only works with top level routes
+  const activeUrl = layoutSegments.includes(url.replace("/", "")) || (url === "/" && layoutSegments.length === 0);
   return (
-    <li>
+    <Link
+      href={url}
+      className={`hover:bg-blue-100 p-2 rounded-xs ${
+        activeUrl ? "bg-blue-200 text-blue-600 font-bold" : ""
+      }`}
+    >
       <span className="mr-2">{icon}</span>
-      {url ? (
-        <Link className="inline" href={url}>
-          {name}
-        </Link>
-      ) : (
-        name
-      )}
-    </li>
+      <span>{name}</span>
+    </Link>
   );
 }
 

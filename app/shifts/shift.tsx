@@ -17,41 +17,47 @@ export function Shift({
   } = useShiftActions(shift.id);
 
   return (
-    <div>
-      <Link href={`shifts/${shift.id}`}>
-        <h1>{shift.title}</h1>
-      </Link>
-      <span>Facility:</span>
-      <span>{shift.facilityName}</span>
-      <span>Hourly Rate:</span>
-      {/* For money related calculations a library like decimal.js should be used in a production application, 
+    <article className="border border-blue rounded-xl p-4 m-4 border-blue-400">
+      <header className="text-blue-900 font-bold flex justify-between">
+        <Link href={`shifts/${shift.id}`}>{shift.title}</Link>
+        {/* For money related calculations a library like decimal.js should be used in a production application, 
       to avoid rounding errors associted with floating point arithmetics. I'll leave it like this for simplicity's sake. */}
-      <span>${(shift.hourlyRateCents / 100).toFixed(2)} </span>
-      <span>From:</span>
-      {shift.startsAt.toLocaleString()}
-      <span>To:</span>
-      {shift.endsAt.toLocaleString()}
-      <span>Location:</span>
-      {shift.location}
-      <span>Status:</span>
-      {shift.status}
-      {applied ? <span>Already applied!</span> : null}
-      {!applied ? (
-        <button
-          disabled={loading}
-          className="border border-white rounded-xl cursor-pointer"
-          onClick={onApplyClick}
-        >
-          Apply
-        </button>
-      ) : (
-        <button
-          className="border border-white rounded-xl cursor-pointer"
-          onClick={onWithdrawClick}
-        >
-          Withdraw
-        </button>
-      )}
-    </div>
+        <span>${(shift.hourlyRateCents / 100).toFixed(2)}/hr</span>
+      </header>
+
+      <dl>
+        <dd>
+          <span>{shift.facilityName}</span>
+          <span>{shift.location}</span>
+        </dd>
+        <dd>
+          {shift.startsAt.toLocaleString()}
+          {shift.endsAt.toLocaleString()}
+        </dd>
+      </dl>
+      {applied ? (
+        <span className=" block text-center bg-green-300 p-1 rounded-xl border border-green-800 m-1">
+          Applied
+        </span>
+      ) : null}
+      <footer className="border-t mt-2 pt-2 border-gray-200 text-right w-full ">
+        {!applied ? (
+          <button
+            disabled={loading}
+            className="border text-white bg-blue-700 p-2 min-w-20 border-white rounded-lg hover:bg-blue-400 hover:shadow-md active:shadow-none cursor-pointer"
+            onClick={onApplyClick}
+          >
+            Apply
+          </button>
+        ) : (
+          <button
+            className="border text-white bg-blue-700 p-2 min-w-20 border-white rounded-lg hover:bg-blue-400  hover:shadow-md active:shadow-none cursor-pointer"
+            onClick={onWithdrawClick}
+          >
+            Withdraw
+          </button>
+        )}
+      </footer>
+    </article>
   );
 }
