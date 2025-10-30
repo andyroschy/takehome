@@ -1,7 +1,7 @@
 import * as React from "react";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const HomeIcon: React.FC<React.SVGProps<SVGElement>> = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ref,
   ...props
 }) => (
