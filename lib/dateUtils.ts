@@ -1,8 +1,10 @@
 export function formatDateAndHours(startDate: Date, endDate: Date): string {
-  const date = startDate.toLocaleDateString(undefined, {
-    month: "short",
-    day: "2-digit",
-  });
+  const date = startDate
+    .toLocaleDateString(undefined, {
+      month: "short",
+      day: "2-digit",
+    })
+    .replace(" ", ", ");
 
   const hours = (endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60);
   return `${date} • ${hours} hrs`;

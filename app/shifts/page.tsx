@@ -26,8 +26,10 @@ function extractNumericFilter(
   };
 }
 
-function extractDateFilter(query: string | undefined): OrdinalFilter<Date> | undefined {
-   if (!query) {
+function extractDateFilter(
+  query: string | undefined
+): OrdinalFilter<Date> | undefined {
+  if (!query) {
     return undefined;
   }
 
@@ -35,7 +37,7 @@ function extractDateFilter(query: string | undefined): OrdinalFilter<Date> | und
   const [operator, value] = query.split(":");
 
   const dateValue = Date.parse(value);
-  if (!validOperatos.includes(operator) || isNaN(dateValue)) {   
+  if (!validOperatos.includes(operator) || isNaN(dateValue)) {
     return undefined;
   }
 
@@ -43,7 +45,6 @@ function extractDateFilter(query: string | undefined): OrdinalFilter<Date> | und
     operator: operator as "gt" | "lt" | "equals",
     value: new Date(Date.parse(value)),
   };
-
 }
 
 function getQueryFromParams(searchParams: {
@@ -66,7 +67,6 @@ function getQueryFromParams(searchParams: {
     status: ["OPEN", "CANCELLED"].includes(searchParams.status as string)
       ? (searchParams.status as "OPEN" | "CANCELLED")
       : undefined,
-      
   };
 
   return {
@@ -91,11 +91,14 @@ export default async function Shifts({
   const shifts = result.value;
 
   return (
-    <section className="flex flex-row flex-wrap ">
-      {!shifts.length ? <div>There are no shifts availabe</div> : null}
-      {shifts.map((x) => (
-        <Shift key={x.id} shift={x} applied={x.applied} />
-      ))}
-    </section>
+    <>
+      <header className="text-center w-full text-6xl text-blue-800">Shifts</header>
+      <section className="flex flex-row flex-wrap ">
+        {!shifts.length ? <div>There are no shifts availabe</div> : null}
+        {shifts.map((x) => (
+          <Shift key={x.id} shift={x} applied={x.applied} />
+        ))}
+      </section>
+    </>
   );
 }
