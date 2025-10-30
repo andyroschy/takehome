@@ -5,6 +5,9 @@ import { SideBar } from "./components/sidebar";
 import { connection } from "next/server";
 import prisma from "@/lib/db";
 import { ErrorBoundary } from "./error-boundary";
+import { get } from "http";
+import { getSignedInUser, setUser } from "./actions/session";
+import { fetchUsers } from "./actions/users";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,16 +29,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const currentUserId = await getSignedInUser();
+  const users = await fetchUsers();
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ErrorBoundary>
-          <SideBar />
+          <SideBar users={users}  />
           <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
             <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-              {children}
+              <div>Signed In as: {currentUserId}</div>
+              {!!currentUserId ? children : <div>Please select a user to sign in.</div>}
             </main>
           </div>
         </ErrorBoundary>

@@ -1,16 +1,9 @@
-import prisma from "@/lib/db";
+"use client";
 import Link from "next/link";
-import { connection } from "next/server";
-import { ReactNode } from "react";
+import { ReactNode, useCallback } from "react";
+import { setUser } from "../actions/session";
 
-export async function SideBar() {
-  await connection();
-  const users = await prisma.user.findMany({
-    select: {
-      name: true,
-      id: true,
-    },
-  });
+export function SideBar({ users }: { users: User[] }) {
   return (
     <aside>
       <ul>
@@ -23,7 +16,15 @@ export async function SideBar() {
   );
 }
 
-function SideBarNavigation({ name, icon, url }: { name: string; icon: ReactNode, url?: string }) {
+function SideBarNavigation({
+  name,
+  icon,
+  url,
+}: {
+  name: string;
+  icon: ReactNode;
+  url?: string;
+}) {
   return (
     <li>
       <span>{icon}</span>
@@ -38,11 +39,21 @@ interface User {
 }
 
 function UserSelect({ users }: { users: User[] }) {
+  const onSelect = useCallback(
+    async (e: React.ChangeEvent<HTMLSelectElement>) => {
+      const { value: userId } = e.target;
+      await setUser(userId);
+    },
+    []
+  );
+
   return (
-    <div>
+    <select onChange={onSelect}>
       {users.map((x) => (
-        <div key={x.id}>{x.name}</div>
+        <option key={x.id} value={x.id}>
+          {x.name}
+        </option>
       ))}
-    </div>
+    </select>
   );
 }
