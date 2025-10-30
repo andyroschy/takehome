@@ -1,5 +1,6 @@
-'use client'
+"use client";
 import { Shift as ShiftModel } from "@/generated/prisma/client";
+import Link from "next/link";
 
 export function Shift({
   shift,
@@ -7,13 +8,15 @@ export function Shift({
 }: {
   shift: Pick<
     ShiftModel,
-    "title" | "facilityName" | "hourlyRateCents" | "location" | "status"
+    "id" | "title" | "facilityName" | "hourlyRateCents" | "location" | "status"
   >;
   applied: boolean;
 }) {
   return (
     <div>
-      <h1>{shift.title}</h1>
+      <Link href={`shifts/${shift.id}`}>
+        <h1>{shift.title}</h1>
+      </Link>
       <span>Facility:</span>
       <span>{shift.facilityName}</span>
       <span>Hourly Rate:</span>
@@ -30,7 +33,12 @@ export function Shift({
       {shift.status}
       {applied ? <span>Already applied!</span> : null}
       {!applied ? (
-        <button className="border border-white rounded-xl cursor-pointer" onClick={() => alert("applied!")}>Apply</button>
+        <button
+          className="border border-white rounded-xl cursor-pointer"
+          onClick={() => alert("applied!")}
+        >
+          Apply
+        </button>
       ) : (
         <button onClick={() => alert("withdrawed")}>Withdraw</button>
       )}
