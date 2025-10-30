@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { ShiftSummary } from "./types";
 import { useCallback, useState } from "react";
-import { applyToShift } from "./actions";
+import { applyToShift, withdrawFromShift } from "./actions";
 
 export function Shift({
   shift,
@@ -19,6 +19,16 @@ export function Shift({
     if (!respone.ok) {
       // in a real application this would be a toast notifiaction or somethig
       alert("Failed to apply to shift: " + respone.error);
+    }
+    setLoading(false);
+  }, [shift.id]);
+
+   const onWithdrawClick = useCallback(async () => {
+    setLoading(true);
+    const respone = await withdrawFromShift(shift.id);
+    if (!respone.ok) {
+      // in a real application this would be a toast notifiaction or somethig
+      alert("Failed to withdraw to shift: " + respone.error);
     }
     setLoading(false);
   }, [shift.id]);
@@ -52,7 +62,7 @@ export function Shift({
           Apply
         </button>
       ) : (
-        <button onClick={() => alert("withdrawed")}>Withdraw</button>
+        <button className="border border-white rounded-xl cursor-pointer" onClick={onWithdrawClick}>Withdraw</button>
       )}
     </div>
   );
