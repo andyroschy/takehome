@@ -2,5 +2,5 @@ import { ShiftModel } from "@/generated/prisma/models";
 
 export type ShiftSummary = Pick<
     ShiftModel,
-    "id" | "title" | "facilityName" | "hourlyRateCents" | "location" | "status"
+    "id" | "title" | "facilityName" | "hourlyRateCents" | "location" | "status" | "startsAt" | "endsAt"
   > & { applied: boolean};

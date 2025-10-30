@@ -45,9 +45,9 @@ export function Shift({
       to avoid rounding errors associted with floating point arithmetics. I'll leave it like this for simplicity's sake. */}
       <span>${(shift.hourlyRateCents / 100).toFixed(2)} </span>
       <span>From:</span>
-      {/* {shift.startsAt.toLocaleString()} */}
+      {shift.startsAt.toLocaleString()}
       <span>To:</span>
-      {/* {shift.startsAt.toLocaleString()} */}
+      {shift.endsAt.toLocaleString()}
       <span>Location:</span>
       {shift.location}
       <span>Status:</span>

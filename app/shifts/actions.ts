@@ -79,7 +79,9 @@ export async function getAvailableShifts(
     rate?: OrdinalFilter<number>;
     date?: OrdinalFilter<Date>;
   } = {},
-  sort: SortOption<ShiftSummary, "hourlyRateCents" | "status"> | undefined = undefined
+  sort:
+    | SortOption<ShiftSummary, "hourlyRateCents" | "status">
+    | undefined = undefined
 ): Promise<Result<ShiftSummary[], string>> {
   const userId: string = getCurrentUserId();
 
@@ -95,7 +97,7 @@ export async function getAvailableShifts(
       }
     : undefined;
 
-  const orderBy = sort ? { [sort.field]: sort.direction } : undefined;
+  const orderBy = sort ? { [sort.field]: sort.direction } : { startsAt: "asc" as const };
 
   const shifts = await prisma.shift.findMany({
     select: {
@@ -105,6 +107,8 @@ export async function getAvailableShifts(
       facilityName: true,
       status: true,
       hourlyRateCents: true,
+      startsAt: true,
+      endsAt: true,
       applications: {
         where: {
           userId: userId,
@@ -117,7 +121,7 @@ export async function getAvailableShifts(
       hourlyRateCents: rateFilter,
       startsAt: dateFilter,
     },
-    orderBy,
+    orderBy: orderBy,
   });
   return {
     ok: true,

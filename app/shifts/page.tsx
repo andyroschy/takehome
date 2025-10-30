@@ -26,10 +26,30 @@ function extractNumericFilter(
   };
 }
 
+function extractDateFilter(query: string | undefined): OrdinalFilter<Date> | undefined {
+   if (!query) {
+    return undefined;
+  }
+
+  const validOperatos = ["gt", "lt", "equals"];
+  const [operator, value] = query.split(":");
+
+  const dateValue = Date.parse(value);
+  if (!validOperatos.includes(operator) || isNaN(dateValue)) {   
+    return undefined;
+  }
+
+  return {
+    operator: operator as "gt" | "lt" | "equals",
+    value: new Date(Date.parse(value)),
+  };
+
+}
+
 function getQueryFromParams(searchParams: {
   [key: string]: string | string[] | undefined;
 }): { filter: ShiftFilter; sort: ShiftSort } {
-  const sortOptions = ["hourlyRateCents", "status"] as const;
+  const sortOptions = ["hourlyRateCents", "status", "startsAt"] as const;
   let sort: ShiftSort | undefined = undefined;
   if (
     searchParams.sortBy &&
@@ -42,6 +62,7 @@ function getQueryFromParams(searchParams: {
 
   const filter: ShiftFilter = {
     rate: extractNumericFilter(searchParams.rate as string | undefined),
+    date: extractDateFilter(searchParams.date as string | undefined),
     status: ["OPEN", "CANCELLED"].includes(searchParams.status as string)
       ? (searchParams.status as "OPEN" | "CANCELLED")
       : undefined,
