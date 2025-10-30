@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { act, ReactNode, useCallback } from "react";
+import { ReactNode, useCallback } from "react";
 import { setUser } from "../actions/session";
 import { HomeIcon } from "../icons/home";
 import { CalendarIcon } from "../icons/calendar";

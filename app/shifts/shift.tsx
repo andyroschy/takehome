@@ -2,6 +2,9 @@
 import Link from "next/link";
 import { ShiftSummary } from "./types";
 import { useShiftActions } from "./hooks";
+import { LocationIcon } from "../icons/location";
+import { CalendarIcon } from "../icons/calendar";
+import { ClockIcon } from "../icons/clock";
 
 export function Shift({
   shift,
@@ -25,12 +28,34 @@ export function Shift({
         <span>${(shift.hourlyRateCents / 100).toFixed(2)}/hr</span>
       </header>
 
-      <dl>
-        <dd>
-          <span>{shift.facilityName}</span>
-          <span>{shift.location}</span>
+      <dl className="text-sm text-blue-900">
+        <dd className="items-center flex flex-row gap-2 mt-1">
+          <LocationIcon
+            width={32}
+            height={32}
+            className="bg-blue-100 rounded-2xl p-1 mt-1"
+          />
+          <div className="inline-block">
+            <b className="text-sm">{shift.facilityName}</b>
+            <br />
+            <span>{shift.location}</span>
+          </div>
         </dd>
-        <dd>
+        <dd className="items-center flex flex-row gap-2 mt-1">
+          <CalendarIcon
+            width={32}
+            height={32}
+            className="bg-blue-100 rounded-2xl p-1"
+          />
+          {shift.startsAt.toLocaleString()}
+          {shift.endsAt.toLocaleString()}
+        </dd>
+        <dd className="items-center flex flex-row gap-2 mt-1">
+          <ClockIcon
+            width={32}
+            height={32}
+            className="bg-blue-100 rounded-2xl p-1"
+          />
           {shift.startsAt.toLocaleString()}
           {shift.endsAt.toLocaleString()}
         </dd>
