@@ -1,8 +1,7 @@
 "use client";
 import Link from "next/link";
 import { ShiftSummary } from "./types";
-import { useCallback, useState } from "react";
-import { applyToShift, withdrawFromShift } from "./actions";
+import { useShiftActions } from "./hooks";
 
 export function Shift({
   shift,
@@ -11,27 +10,11 @@ export function Shift({
   shift: ShiftSummary;
   applied: boolean;
 }) {
-  const [loading, setLoading] = useState(false);
-
-  const onApplyClick = useCallback(async () => {
-    setLoading(true);
-    const respone = await applyToShift(shift.id);
-    if (!respone.ok) {
-      // in a real application this would be a toast notifiaction or somethig
-      alert("Failed to apply to shift: " + respone.error);
-    }
-    setLoading(false);
-  }, [shift.id]);
-
-   const onWithdrawClick = useCallback(async () => {
-    setLoading(true);
-    const respone = await withdrawFromShift(shift.id);
-    if (!respone.ok) {
-      // in a real application this would be a toast notifiaction or somethig
-      alert("Failed to withdraw to shift: " + respone.error);
-    }
-    setLoading(false);
-  }, [shift.id]);
+  const {
+    loading,
+    apply: onApplyClick,
+    withdraw: onWithdrawClick,
+  } = useShiftActions(shift.id);
 
   return (
     <div>
@@ -62,7 +45,12 @@ export function Shift({
           Apply
         </button>
       ) : (
-        <button className="border border-white rounded-xl cursor-pointer" onClick={onWithdrawClick}>Withdraw</button>
+        <button
+          className="border border-white rounded-xl cursor-pointer"
+          onClick={onWithdrawClick}
+        >
+          Withdraw
+        </button>
       )}
     </div>
   );

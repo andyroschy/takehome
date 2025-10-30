@@ -1,5 +1,8 @@
 import prisma from "@/lib/db";
 import { connection } from "next/server";
+import { ShiftDetail } from "./shift-detail";
+import { redirect } from "next/navigation";
+import { getSignedInUserId } from "@/app/actions/session";
 
 export default async function Detail({
   params,
@@ -7,21 +10,23 @@ export default async function Detail({
   params: Promise<{ id: string }>;
 }) {
   await connection();
-  
+
   const { id } = await params;
   const shift = await prisma.shift.findUnique({
     where: { id },
-    select: {
-      applications: false,
-      description: true,
-      facilityName: true,
-      hourlyRateCents: true,
-      id: true,
-      location: true,
-      status: true,
-      title: true,
-    }
+    include: {
+      applications: {
+        where: {
+          userId: (await getSignedInUserId()) ?? undefined,
+          status: "APPLIED",
+        },
+      },
+    },
   });
 
-  return <div>{JSON.stringify(shift)}</div>;
+  if (!shift) {
+    return redirect("/shifts");
+  }
+
+  return <ShiftDetail shift={shift} applied={shift.applications.length > 0} />;
 }
