@@ -21,7 +21,7 @@ export function Shift({
   } = useShiftActions(shift.id);
 
   return (
-    <article className="border border-blue rounded-xl p-4 m-4 border-blue-400">
+    <article className="border border-blue rounded-xl p-4 m-4 border-blue-400 min-w-100">
       <header className="text-blue-900 font-bold flex justify-between">
         <Link href={`shifts/${shift.id}`}>{shift.title}</Link>
         {/* For money related calculations a library like decimal.js should be used in a production application, 
@@ -60,16 +60,19 @@ export function Shift({
           {formatShiftTime(shift.startsAt, shift.endsAt)}
         </dd>
       </dl>
-      {applied ? (
-        <span className=" block text-center bg-green-300 p-1 rounded-xl border border-green-800 m-1">
-          Applied
-        </span>
-      ) : null}
-      <footer className="border-t mt-2 pt-2 border-gray-200 text-right w-full ">
+
+      <footer className="flex flex-row justify-between border-t mt-2 pt-2 border-gray-200 text-right w-full ">
+        {applied ? (
+          <span className="blockw-20 text-center bg-green-300 p-1 rounded-xl border border-green-800 m-1">
+            Applied
+          </span>
+        ) : (
+          <span />
+        )}
         {!applied ? (
           <button
             disabled={loading}
-            className="border text-white bg-blue-700 p-2 min-w-20 border-white rounded-lg hover:bg-blue-400 hover:shadow-md active:shadow-none cursor-pointer"
+            className="border block text-white bg-blue-700 p-2 min-w-20 border-white rounded-lg hover:bg-blue-400 hover:shadow-md active:shadow-none cursor-pointer"
             onClick={onApplyClick}
           >
             Apply

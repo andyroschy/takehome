@@ -91,7 +91,7 @@ export default async function Shifts({
   const shifts = result.value;
 
   return (
-    <section>
+    <section className="flex flex-row flex-wrap ">
       {!shifts.length ? <div>There are no shifts availabe</div> : null}
       {shifts.map((x) => (
         <Shift key={x.id} shift={x} applied={x.applied} />
