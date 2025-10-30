@@ -16,8 +16,7 @@ export async function SideBar() {
       <ul>
         <SideBarNavigation name="Home" icon={"h"} url="/" />
         <SideBarNavigation name="Shifts" icon={"h"} url="/shifts" />
-        <SideBarNavigation name="Message" icon={"h"} />
-        <SideBarNavigation name="Account" icon={"h"} />
+        <SideBarNavigation name="Applications" icon={"h"} url="/applications" />
       </ul>
       <UserSelect users={users} />
     </aside>

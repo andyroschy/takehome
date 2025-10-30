@@ -7,6 +7,7 @@ export default async function Detail({
   params: Promise<{ id: string }>;
 }) {
   await connection();
+  
   const { id } = await params;
   const shift = await prisma.shift.findUnique({
     where: { id },

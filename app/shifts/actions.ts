@@ -30,6 +30,7 @@ export async function applyToShift(shiftId: string): Promise<Maybe<string>> {
       },
     });
     revalidatePath("/shifts");
+    revalidatePath("/applications");
     return { ok: true };
   } catch (error) {
     console.log("Error applying to shift:", error);
