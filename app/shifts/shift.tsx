@@ -23,7 +23,7 @@ export function Shift({
   return (
     <article className="border border-blue rounded-xl p-4 m-4 border-blue-400 min-w-100">
       <header className="text-blue-900 font-bold flex justify-between">
-        <Link href={`shifts/${shift.id}`}>{shift.title}</Link>
+        <Link className="hover:text-blue-400 hover:text-shadow-md" href={`shifts/${shift.id}`}>{shift.title}</Link>
         {/* For money related calculations a library like decimal.js should be used in a production application, 
       to avoid rounding errors associted with floating point arithmetics. I'll leave it like this for simplicity's sake. */}
         <span>${(shift.hourlyRateCents / 100).toFixed(2)}/hr</span>

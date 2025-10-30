@@ -24,7 +24,7 @@ export default async function Applications() {
   const applications = result.value;
 
   return (
-    <div>
+    <section className="flex flex-row flex-wrap">
       {!applications.length && (
         <div>
           You don&apos;t have any applicatoins yet. Apply to a{" "}
@@ -81,6 +81,6 @@ export default async function Applications() {
           </span>
         </article>
       ))}
-    </div>
+    </section>
   );
 }
