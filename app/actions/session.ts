@@ -8,7 +8,7 @@ export async function setUser(userId: string) {
    revalidatePath('/');
 }
 
-export async function getSignedInUser() {
+export async function getSignedInUserId() {
   const cookie = (await cookies()).get('session');
   if (!cookie) return null;
   const session = JSON.parse(cookie.value);

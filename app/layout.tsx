@@ -3,10 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SideBar } from "./components/sidebar";
 import { connection } from "next/server";
-import prisma from "@/lib/db";
 import { ErrorBoundary } from "./error-boundary";
-import { get } from "http";
-import { getSignedInUser, setUser } from "./actions/session";
+import { getSignedInUserId } from "./actions/session";
 import { fetchUsers } from "./actions/users";
 
 const geistSans = Geist({
@@ -29,7 +27,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const currentUserId = await getSignedInUser();
+  await connection();
+  const currentUserId = await getSignedInUserId();
   const users = await fetchUsers();
   return (
     <html lang="en">

@@ -1,12 +1,16 @@
 "use server";
 import prisma from "@/lib/db";
 import { Maybe, Result } from "@/lib/types";
-import { getCurrentUserId } from "@/lib/users";
 import { ShiftSummary } from "./types";
 import { revalidatePath } from "next/cache";
+import { getSignedInUserId } from "../actions/session";
 
 export async function applyToShift(shiftId: string): Promise<Maybe<string>> {
-  const userId = getCurrentUserId();
+  const userId = await getSignedInUserId();
+
+  if (!userId) {
+    return { ok: false, error: "User not signed in." };
+  }
 
   try {
     // SINCE WE ARE USING UPSERT THERE'S NO NEED TO VALIDATE IF USER ALREADY APPLIED TO SHIFT
@@ -41,7 +45,11 @@ export async function applyToShift(shiftId: string): Promise<Maybe<string>> {
 export async function withdrawFromShift(
   shiftId: string
 ): Promise<Maybe<string>> {
-  const userId = getCurrentUserId();
+  const userId = await getSignedInUserId();
+
+  if (!userId) {
+    return { ok: false, error: "User not signed in." };
+  }
 
   try {
     await prisma.application.update({
@@ -83,7 +91,10 @@ export async function getAvailableShifts(
     | SortOption<ShiftSummary, "hourlyRateCents" | "status">
     | undefined = undefined
 ): Promise<Result<ShiftSummary[], string>> {
-  const userId: string = getCurrentUserId();
+  const userId = await getSignedInUserId();
+  if (!userId) {
+    return { ok: false, error: "User not signed in." };
+  }
 
   const rateFilter = filter.rate
     ? {
@@ -97,7 +108,9 @@ export async function getAvailableShifts(
       }
     : undefined;
 
-  const orderBy = sort ? { [sort.field]: sort.direction } : { startsAt: "asc" as const };
+  const orderBy = sort
+    ? { [sort.field]: sort.direction }
+    : { startsAt: "asc" as const };
 
   const shifts = await prisma.shift.findMany({
     select: {

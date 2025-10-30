@@ -2,7 +2,7 @@
 import { ApplicationModel, ShiftModel } from "@/generated/prisma/models";
 import prisma from "@/lib/db";
 import { Result } from "@/lib/types";
-import { getCurrentUserId } from "@/lib/users";
+import { getSignedInUserId } from "../actions/session";
 
 type ApplicationSummary = ApplicationModel & {
   shift: ShiftModel;
@@ -11,12 +11,16 @@ type ApplicationSummary = ApplicationModel & {
 export async function getApplications(): Promise<
   Result<ApplicationSummary[], string>
 > {
-  const userId = getCurrentUserId();
+  const userId = await getSignedInUserId();
+  if (!userId) {
+    return { ok: false, error: "User not signed in." };
+  }
+
   try {
     const applications = await prisma.application.findMany({
       where: { userId },
       include: {
-        shift: true
+        shift: true,
       },
     });
     return { ok: true, value: applications };
