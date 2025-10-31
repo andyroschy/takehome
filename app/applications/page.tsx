@@ -8,7 +8,7 @@ import { ClockIcon } from "../icons/clock";
 import { ApplicationStatus } from "@/generated/prisma/enums";
 
 const statusStyles: Record<ApplicationStatus, string> = {
-  ["APPLIED"]: "bg-green-200 border-green-600 text-green-800",
+  ["APPLIED"]: "bg-yellow-200 border-yellow-600 text-yellow-800",
   ["WITHDRAWN"]: "bg-gray-200 border-gray-600 text-gray-800",
   ["REJECTED"]: "bg-red-200 border-red-600 text-red-800",
   ["HIRED"]: "bg-green-200 border-green-600 text-green-800",

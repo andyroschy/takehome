@@ -14,6 +14,15 @@ export async function applyToShift(shiftId: string): Promise<Maybe<string>> {
   }
 
   try {
+    const shift = await prisma.shift.findFirst({
+      where: {
+        id: shiftId,
+      }
+    });
+
+    if (shift?.status !== 'OPEN') {
+      return {ok: false, error: 'You can only apply to an open shift'}
+    }
     // SINCE WE ARE USING UPSERT THERE'S NO NEED TO VALIDATE IF USER ALREADY APPLIED TO SHIFT
     // DUPLICATE APPLICATION WILL SIMPLY UPDATE THE TIMESTAMP
     await prisma.application.upsert({
@@ -121,7 +130,9 @@ export async function getAvailableShifts(
       applications: {
         where: {
           userId: userId,
-          status: "APPLIED",
+          status: {
+            in: ['APPLIED', 'HIRED']
+          },
         },
       },
     },
@@ -137,6 +148,7 @@ export async function getAvailableShifts(
     value: shifts.map((shift) => ({
       ...shift,
       applied: shift.applications.length > 0,
+      hired: shift.applications[0]?.status === 'HIRED'
     })),
   };
 }
