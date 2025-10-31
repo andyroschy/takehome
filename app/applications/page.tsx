@@ -24,7 +24,7 @@ export default async function Applications() {
   const applications = result.value;
 
   return (
-    <section className="flex flex-row flex-wrap">
+    <section className="flex flex-row flex-wrap gap-4">
       {!applications.length && (
         <div>
           You don&apos;t have any applicatoins yet. Apply to a{" "}
@@ -35,7 +35,7 @@ export default async function Applications() {
       {applications.map(({ shift, status }) => (
         <article
           key={shift.id}
-          className="border border-blue rounded-xl p-4 m-4 border-blue-400 min-w-100"
+          className="border border-blue rounded-xl p-4 max-w-1/3 border-blue-400 min-w-100 grow"
         >
           <header className="text-blue-900 font-bold flex justify-between">
             <Link href={`shifts/${shift.id}`}>{shift.title}</Link>
