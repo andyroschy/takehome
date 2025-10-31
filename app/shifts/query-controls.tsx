@@ -12,7 +12,7 @@ export function QueryControls() {
   const router = useRouter();
   const path = usePathname();
 
-  const stauts = searchParams.get("status") || "";
+  const status = searchParams.get("status") || "";
   const rate = extractNumericFilter(searchParams.get("rate") || "");
   const date = extractDateFilter(searchParams.get("rate") || "");
 
@@ -51,6 +51,10 @@ export function QueryControls() {
         "date",
         `${inputValues.dateOperator ?? "equals"}:${inputValues.date}`
       );
+    }
+
+    if (inputValues.status) {
+      params.set('status', inputValues.status)
     }
 
     router.push(`${path}?${params.toString()}`);
@@ -107,7 +111,7 @@ export function QueryControls() {
           </div>
           <div>
             <label htmlFor="status">Status</label>
-            <select className="w-40 border border-blue-400 rounded-xl">
+            <select value={inputValues.status ?? ''} onChange={onInputChangeHandler} name="status" className="w-40 border border-blue-400 rounded-xl">
               <option value="OPEN">OPEN</option>
               <option value="CANCELLED">CANCELLED</option>
               <option value="">ANY</option>
