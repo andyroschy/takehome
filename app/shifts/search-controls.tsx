@@ -6,22 +6,22 @@ import { ChangeEvent, ChangeEventHandler, useCallback, useState } from "react";
 import { MagnifyingGlassIcon } from "../icons/mangnifying-glass";
 import { useRouter } from "next/navigation";
 
-export function QueryControls() {
+export function SearchControls() {
   const searchParams = useSearchParams();
 
   const router = useRouter();
   const path = usePathname();
 
-  const status = searchParams.get("status") || "";
+  const status = searchParams.get("status");
   const rate = extractNumericFilter(searchParams.get("rate") || "");
   const date = extractDateFilter(searchParams.get("rate") || "");
 
   const [inputValues, setInputValues] = useState({
-    status: searchParams.get("status"),
+    status: status ?? "",
     rate: rate?.value ? (rate?.value / 100).toFixed(2) : "",
-    rateOperator: rate?.operator ?? 'equals',
+    rateOperator: rate?.operator ?? "equals",
     date: date?.value.toDateString() ?? "",
-    dateOperator: date?.operator ?? 'equals',
+    dateOperator: date?.operator ?? "equals",
   });
 
   const onInputChangeHandler = useCallback(
@@ -36,7 +36,7 @@ export function QueryControls() {
   );
 
   const onSearchHandler = () => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(searchParams);
     if (inputValues.rate) {
       params.set(
         "rate",
@@ -44,6 +44,8 @@ export function QueryControls() {
           parseFloat(inputValues.rate) * 100
         )}`
       );
+    } else {
+      params.delete("rate");
     }
 
     if (inputValues.date) {
@@ -51,10 +53,14 @@ export function QueryControls() {
         "date",
         `${inputValues.dateOperator ?? "equals"}:${inputValues.date}`
       );
+    } else {
+      params.delete("date");
     }
 
     if (inputValues.status) {
-      params.set('status', inputValues.status)
+      params.set("status", inputValues.status);
+    } else {
+      params.delete("status");
     }
 
     router.push(`${path}?${params.toString()}`);
@@ -63,31 +69,32 @@ export function QueryControls() {
   const onClearHandler = () => {
     router.push(path);
     setInputValues({
-      date: '',
-      dateOperator: 'equals',
-      rate: '',
-      rateOperator: 'equals',
-      status: ''
+      date: "",
+      dateOperator: "equals",
+      rate: "",
+      rateOperator: "equals",
+      status: "",
     });
   };
 
   return (
-    <section className="flex flex-row justify-between w-full">
+    <section className="flex flex-row justify-between w-full flex-wrap">
       <article>
-        Filter:
         <form
-          className="flex flex-row gap-4 justify-center my-4"
+          className="flex flex-row gap-4 justify-center my-4 flex-wrap "
           onSubmit={(e) => e.preventDefault()}
         >
           <div>
-            <label htmlFor="rate">Rate</label>
+            <label htmlFor="rate" className="text-blue-800">
+              Rate
+            </label>
             <OperatorSelect
               value={inputValues.rateOperator ?? "equals"}
               field="rate"
               onChange={onInputChangeHandler}
             ></OperatorSelect>
             <input
-              className="w-40 border border-blue-400 rounded-xl"
+              className="w-40 border border-blue-400 rounded-xl p-1 ml-1"
               name="rate"
               type="number"
               onChange={onInputChangeHandler}
@@ -95,7 +102,9 @@ export function QueryControls() {
             ></input>
           </div>
           <div>
-            <label htmlFor="date">Date</label>
+            <label htmlFor="date" className="text-blue-800">
+              Date
+            </label>
             <OperatorSelect
               value={inputValues.dateOperator ?? "equals"}
               field="date"
@@ -103,15 +112,22 @@ export function QueryControls() {
             ></OperatorSelect>
             <input
               name="date"
-              className="w-40 border border-blue-400 rounded-xl"
+              className="w-40 border border-blue-400 rounded-xl p-1 ml-1"
               type="date"
               value={inputValues.date ?? ""}
               onChange={onInputChangeHandler}
             ></input>
           </div>
           <div>
-            <label htmlFor="status">Status</label>
-            <select value={inputValues.status ?? ''} onChange={onInputChangeHandler} name="status" className="w-40 border border-blue-400 rounded-xl">
+            <label htmlFor="status" className="text-blue-800">
+              Status
+            </label>
+            <select
+              value={inputValues.status ?? ""}
+              onChange={onInputChangeHandler}
+              name="status"
+              className="w-40 border border-blue-400 rounded-xl p-1 ml-1"
+            >
               <option value="OPEN">OPEN</option>
               <option value="CANCELLED">CANCELLED</option>
               <option value="">ANY</option>
@@ -132,8 +148,7 @@ export function QueryControls() {
         </form>
       </article>
       <article>
-        Sort by:
-        <menu className="flex flex-row gap-4 justify-center my-4">
+        <menu className="flex flex-row gap-4 justify-center my-4 text-blue-800">
           <SortOption label="Rate" field="hourlyRateCents" />
           <SortOption label="Status" field="status" />
           <SortOption label="Date" field="startsAt" />
@@ -145,15 +160,23 @@ export function QueryControls() {
 
 function SortOption({ label, field }: { label: string; field: string }) {
   const searchParams = useSearchParams();
+  const path = usePathname();
 
   let direction = "asc";
   if (searchParams.get("sortBy") === field) {
     direction = searchParams.get("sortDirection") === "asc" ? "desc" : "asc";
   }
 
+  const newParams = new URLSearchParams(searchParams);
+
+  newParams.set("sortDirection", direction);
+  newParams.set("sortBy", field);
+
+  const url = `${path}?${newParams.toString()}`;
+
   return (
     <li>
-      <Link href={`/shifts?sortBy=${field}&sortDirection=${direction}`}>
+      <Link className="hover:underline cursor-pointer" href={url}>
         {direction === "asc" ? "↓" : "↑"}
         {label}
       </Link>
@@ -175,7 +198,7 @@ function OperatorSelect({
       onChange={onChange}
       value={value}
       name={`${field}Operator`}
-      className="border border-blue-400 rounded-lg p-1"
+      className="border border-blue-400 rounded-lg p-1 cursor-pointer  box-content ml-1"
     >
       <option value="gt">&gt;</option>
       <option value="lt">&lt;</option>
