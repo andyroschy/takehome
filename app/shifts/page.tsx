@@ -1,7 +1,7 @@
 import { connection } from "next/server";
-import { Shift } from "./shift";
+import { Shift } from "./components/shift";
 import { getAvailableShifts,  } from "./actions";
-import { SearchControls } from "./search-controls";
+import { SearchControls } from "./components/search-controls";
 import { extractNumericFilter, extractDateFilter } from "@/lib/search-utils";
 
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;

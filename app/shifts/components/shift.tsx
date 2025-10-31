@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
-import { ShiftSummary } from "./types";
-import { useShiftActions } from "./hooks";
-import { LocationIcon } from "../icons/location";
-import { CalendarIcon } from "../icons/calendar";
-import { ClockIcon } from "../icons/clock";
+import { ShiftSummary } from "../types";
+import { useShiftActions } from "../hooks";
+import { LocationIcon } from "../../icons/location";
+import { CalendarIcon } from "../../icons/calendar";
+import { ClockIcon } from "../../icons/clock";
 import { formatDateAndHours, formatShiftTime } from "@/lib/dateUtils";
-import { StatusIcon } from "../icons/status";
+import { StatusIcon } from "../../icons/status";
 
 export function Shift({
   shift,
@@ -88,6 +88,7 @@ export function Shift({
         ) : (
           <span />
         )}
+        {/* since this button have the same style and logic than those in the details view, we could create a reusable component to keep the logic in sync */}
         {!applied ? (
           <button
             disabled={shift.status !== 'OPEN' || loading}

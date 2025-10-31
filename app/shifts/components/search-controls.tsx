@@ -3,7 +3,7 @@ import { extractDateFilter, extractNumericFilter } from "@/lib/search-utils";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ChangeEvent, ChangeEventHandler, useCallback, useState } from "react";
-import { MagnifyingGlassIcon } from "../icons/mangnifying-glass";
+import { MagnifyingGlassIcon } from "../../icons/mangnifying-glass";
 import { useRouter } from "next/navigation";
 
 export function SearchControls() {
