@@ -25,13 +25,15 @@ export default async function Applications() {
 
   return (
     <section className="flex flex-row flex-wrap gap-4">
+      <header className="text-center w-full text-6xl text-blue-800">
+        My Applications
+      </header>
       {!applications.length && (
         <div>
           You don&apos;t have any applicatoins yet. Apply to a{" "}
           <Link href={"/shifts"}>shift</Link>
         </div>
       )}
-      <header className="text-center w-full text-6xl text-blue-800">My Applications</header>
       {applications.map(({ shift, status }) => (
         <article
           key={shift.id}
