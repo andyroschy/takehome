@@ -22,7 +22,7 @@ export function Shift({
   } = useShiftActions(shift.id);
 
   return (
-    <article className="border border-blue rounded-xl p-4 m-4 border-blue-400 min-w-100">
+    <article className="border border-blue rounded-xl p-4 border-blue-400 min-w-100 grow">
       <header className="text-blue-900 font-bold flex justify-between">
         <Link
           className="hover:text-blue-400 hover:text-shadow-md"

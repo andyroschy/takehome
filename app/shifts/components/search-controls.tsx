@@ -84,8 +84,8 @@ export function SearchControls() {
           className="flex flex-row gap-4 justify-center my-4 flex-wrap "
           onSubmit={(e) => e.preventDefault()}
         >
-          <div>
-            <label htmlFor="rate" className="text-blue-800">
+          <div className="text-blue-800">
+            <label htmlFor="rate" >
               Rate
             </label>
             <OperatorSelect
@@ -93,13 +93,14 @@ export function SearchControls() {
               field="rate"
               onChange={onInputChangeHandler}
             ></OperatorSelect>
+            <span className="ml-2">$</span>
             <input
-              className="w-40 border border-blue-400 rounded-xl p-1 ml-1"
+              className="w-40 border border-blue-400 rounded-xl p-1 ml-1 text-black"
               name="rate"
               type="number"
               onChange={onInputChangeHandler}
               value={inputValues.rate ?? ""}
-            ></input>
+            ></input>/hr
           </div>
           <div>
             <label htmlFor="date" className="text-blue-800">
@@ -126,7 +127,7 @@ export function SearchControls() {
               value={inputValues.status ?? ""}
               onChange={onInputChangeHandler}
               name="status"
-              className="w-40 border border-blue-400 rounded-xl p-1 ml-1"
+              className="w-40 border cursor-pointer border-blue-400 rounded-xl p-1 ml-1"
             >
               <option value="OPEN">OPEN</option>
               <option value="CANCELLED">CANCELLED</option>
@@ -200,7 +201,7 @@ function OperatorSelect({
       onChange={onChange}
       value={value}
       name={`${field}Operator`}
-      className="border border-blue-400 rounded-lg p-1 cursor-pointer  box-content ml-1"
+      className="border border-blue-400 rounded-lg p-1 cursor-pointer  box-content ml-1 text-black"
     >
       <option value="gt">&gt;</option>
       <option value="lt">&lt;</option>

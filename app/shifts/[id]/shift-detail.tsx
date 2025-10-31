@@ -24,7 +24,7 @@ export function ShiftDetail({
     loading,
   } = useShiftActions(shift.id);
   return (
-    <section className="w-full h-full max-w-full">
+    <section className="w-full h-full max-w-full flex-col flex">
       <Link
         className="text-left hover:underline text-blue-600 hover:text-blue-400"
         href={"/shifts"}
@@ -91,7 +91,7 @@ export function ShiftDetail({
           </dd>
         </dl>
       </article>
-      <article className="mt-4">{shift.description}</article>
+      <article className="mt-4 flex-1">{shift.description}</article>
       <footer className="flex flex-row justify-between border-t mt-2 pt-2 border-gray-200 text-right w-full ">
         {applied ? (
           <span className="blockw-20 text-center bg-green-300 p-1 rounded-xl border border-green-800 m-1">

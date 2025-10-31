@@ -58,7 +58,7 @@ export default async function Shifts({
     <div className="flex flex-col h-full w-full max-w-full scroll-auto">
       <header className="text-center w-full text-6xl text-blue-800">Browse Shifts</header>
       <SearchControls />
-      <section className="flex flex-row flex-wrap justify-between ">
+      <section className="flex flex-row flex-wrap justify-between gap-4 ">
         {!shifts.length ? <div>No shifts were found</div> : null}
         {shifts.map((x) => (
           <Shift key={x.id} shift={x} applied={x.applied} />
