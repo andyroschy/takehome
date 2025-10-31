@@ -11,6 +11,7 @@ export default async function Detail({
 }) {
   await connection();
 
+  // this should be reausable server actions like the others... but I think you get the gist
   const { id } = await params;
   const shift = await prisma.shift.findUnique({
     where: { id },
@@ -18,7 +19,9 @@ export default async function Detail({
       applications: {
         where: {
           userId: (await getSignedInUserId()) ?? undefined,
-          status: "APPLIED",
+          status: {
+            in: ['APPLIED', 'HIRED']
+          },
         },
       },
     },
@@ -28,5 +31,5 @@ export default async function Detail({
     return redirect("/shifts");
   }
 
-  return <ShiftDetail shift={shift} applied={shift.applications.length > 0} />;
+  return <ShiftDetail shift={shift} applied={shift.applications.length > 0} hired={shift.applications[0]?.status === 'HIRED'} />;
 }

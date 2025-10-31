@@ -7,13 +7,16 @@ import { ClockIcon } from "@/app/icons/clock";
 import { formatDateAndHours, formatShiftTime } from "@/lib/dateUtils";
 import Link from "next/link";
 import { MoneyIcon } from "@/app/icons/money";
+import { StatusIcon } from "@/app/icons/status";
 
 export function ShiftDetail({
   shift,
   applied,
+  hired,
 }: {
   shift: ShiftModel;
   applied: boolean;
+  hired: boolean;
 }) {
   const {
     apply: onApplyClick,
@@ -63,6 +66,19 @@ export function ShiftDetail({
             />
             {formatShiftTime(shift.startsAt, shift.endsAt)}
           </dd>
+          <dd className="items-center flex flex-row gap-2 mt-1">
+            <StatusIcon
+              width={32}
+              height={32}
+              className="bg-blue-100 rounded-2xl p-1"
+            />
+            {shift.status === "HIRED"
+              ? // if shift status is HIRED, but the summary hired flag is not set, it means someone else was hired for this shift
+                hired
+                ? "HIRED"
+                : "UNAVAILABLE"
+              : shift.status}
+          </dd>
           <dd className="items-center flex flex-row text-lg gap-2">
             <MoneyIcon
               width={32}
@@ -86,15 +102,16 @@ export function ShiftDetail({
         )}
         {!applied ? (
           <button
-            disabled={loading}
-            className="border block text-white bg-blue-700 p-2 min-w-20 border-white rounded-lg hover:bg-blue-400 hover:shadow-md active:shadow-none cursor-pointer"
+            disabled={loading || shift.status !== "OPEN"}
+            className="border block disabled:bg-gray-500 disabled:cursor-default text-white bg-blue-700 p-2 min-w-20 border-white rounded-lg hover:bg-blue-400 hover:not:disabled:shadow-md active:not:disabled:shadow-none cursor-pointer"
             onClick={onApplyClick}
           >
             Apply
           </button>
         ) : (
           <button
-            className="border text-white bg-blue-700 p-2 min-w-20 border-white rounded-lg hover:bg-blue-400  hover:shadow-md active:shadow-none cursor-pointer"
+            disabled={loading || shift.status !== "OPEN"}
+            className="border block disabled:bg-gray-500 disabled:cursor-default text-white bg-blue-700 p-2 min-w-20 border-white rounded-lg hover:bg-blue-400 hover:not:disabled:shadow-md active:not:disabled:shadow-none cursor-pointer"
             onClick={onWithdrawClick}
           >
             Withdraw
