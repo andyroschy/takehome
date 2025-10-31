@@ -1,52 +1,15 @@
 import { connection } from "next/server";
 import { Shift } from "./shift";
-import { getAvailableShifts, OrdinalFilter } from "./actions";
+import { getAvailableShifts,  } from "./actions";
 import { QueryControls } from "./query-controls";
+import { extractNumericFilter, extractDateFilter } from "@/lib/search-utils";
 
 type UnwrapPromise<T> = T extends Promise<infer U> ? U : T;
 type ShiftFilter = UnwrapPromise<Parameters<typeof getAvailableShifts>[0]>;
 type ShiftSort = UnwrapPromise<Parameters<typeof getAvailableShifts>[1]>;
 
-// TODO: Move to lib/query.ts
-function extractNumericFilter(
-  query: string | undefined
-): OrdinalFilter<number> | undefined {
-  if (!query) {
-    return undefined;
-  }
 
-  const validOperatos = ["gt", "lt", "equals"];
-  const [operator, value] = query.split(":");
-  if (!validOperatos.includes(operator) || isNaN(Number(value))) {
-    return undefined;
-  }
 
-  return {
-    operator: operator as "gt" | "lt" | "equals",
-    value: Number(value),
-  };
-}
-
-function extractDateFilter(
-  query: string | undefined
-): OrdinalFilter<Date> | undefined {
-  if (!query) {
-    return undefined;
-  }
-
-  const validOperatos = ["gt", "lt", "equals"];
-  const [operator, value] = query.split(":");
-
-  const dateValue = Date.parse(value);
-  if (!validOperatos.includes(operator) || isNaN(dateValue)) {
-    return undefined;
-  }
-
-  return {
-    operator: operator as "gt" | "lt" | "equals",
-    value: new Date(Date.parse(value)),
-  };
-}
 
 export function getShiftsQueryFromParams(searchParams: {
   [key: string]: string | string[] | undefined;

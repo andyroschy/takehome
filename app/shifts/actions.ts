@@ -4,6 +4,7 @@ import { Maybe, Result } from "@/lib/types";
 import { ShiftSummary } from "./types";
 import { revalidatePath } from "next/cache";
 import { getSignedInUserId } from "../actions/session";
+import { OrdinalFilter } from "@/lib/search-utils";
 
 export async function applyToShift(shiftId: string): Promise<Maybe<string>> {
   const userId = await getSignedInUserId();
@@ -70,11 +71,6 @@ export async function withdrawFromShift(
     return { ok: false, error: "Failed to withdraw from shift." };
   }
 }
-
-export type OrdinalFilter<T extends number | Date> = {
-  operator: "gt" | "lt" | "equals";
-  value: T;
-};
 
 type SortOption<T, K extends keyof T> = {
   field: K;
