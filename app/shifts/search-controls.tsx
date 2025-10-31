@@ -135,13 +135,15 @@ export function SearchControls() {
           </div>
           <button
             onClick={onSearchHandler}
+            aria-label="search"
             className="cursor-pointer  transition-colors hover:bg-blue-300 border border-blue-200 rounded-4xl p-2"
           >
             <MagnifyingGlassIcon height={16} width={16} />
           </button>
           <button
             onClick={onClearHandler}
-            className="cursor-pointer  transition-colors hover:bg-blue-300 border border-blue-200 rounded-4xl "
+            aria-label="clear"
+            className="cursor-pointer  transition-colors hover:bg-red-300 border border-blue-200 rounded-4xl w-8"
           >
             x
           </button>
