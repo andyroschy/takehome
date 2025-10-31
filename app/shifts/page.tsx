@@ -48,7 +48,7 @@ function extractDateFilter(
   };
 }
 
-function getQueryFromParams(searchParams: {
+export function getShiftsQueryFromParams(searchParams: {
   [key: string]: string | string[] | undefined;
 }): { filter: ShiftFilter; sort: ShiftSort } {
   const sortOptions = ["hourlyRateCents", "status", "startsAt"] as const;
@@ -82,7 +82,7 @@ export default async function Shifts({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
   await connection();
-  const query = getQueryFromParams(await searchParams);
+  const query = getShiftsQueryFromParams(await searchParams);
   // TODO: add pagination or infinite scrolling
   const result = await getAvailableShifts(query.filter, query.sort);
   if (!result.ok) {
