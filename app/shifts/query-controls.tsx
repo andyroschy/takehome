@@ -1,9 +1,34 @@
 "use client";
+import { extractDateFilter, extractNumericFilter } from "@/lib/search-utils";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { ChangeEventHandler } from "react";
+import { ChangeEvent, ChangeEventHandler, useCallback, useState } from "react";
 
 export function QueryControls() {
+  const searchParams = useSearchParams();
+  const stauts = searchParams.get("status") || "";
+  const rate = extractNumericFilter(searchParams.get("rate") || "");
+  const date = extractDateFilter(searchParams.get("rate") || "");
+
+  const [inputValues, setInputValues] = useState({
+    status: searchParams.get("status"),
+    rate: rate?.value,
+    rateOperator: rate?.operator,
+    date: date?.value.toDateString(),
+    dateOperator: date?.operator,
+  });
+
+  const onInputChangeHandler = useCallback(
+    (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => {
+      const { name, value } = e.target;
+      setInputValues((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    },
+    []
+  );
+
   return (
     <section className="flex flex-row justify-between w-full">
       <article>
@@ -11,20 +36,32 @@ export function QueryControls() {
         <form className="flex flex-row gap-4 justify-center my-4">
           <div>
             <label htmlFor="rate">Rate</label>
-            <OperatorSelect onChange={() => null}></OperatorSelect>
+            <OperatorSelect
+              value={inputValues.rateOperator ?? "equals"}
+              field="rate"
+              onChange={onInputChangeHandler}
+            ></OperatorSelect>
             <input
               className="w-40 border border-blue-400 rounded-xl"
               name="rate"
-              onChange={undefined}
+              type="number"
+              onChange={onInputChangeHandler}
+              value={inputValues.rate ?? ''}
             ></input>
           </div>
           <div>
             <label htmlFor="date">Date</label>
-            <OperatorSelect onChange={() => null}></OperatorSelect>
+            <OperatorSelect
+              value={inputValues.dateOperator ?? "equals"}
+              field="date"
+              onChange={onInputChangeHandler}
+            ></OperatorSelect>
             <input
               name="date"
               className="w-40 border border-blue-400 rounded-xl"
-              onChange={undefined}
+              type="date"
+              value={inputValues.date ?? ''}
+              onChange={onInputChangeHandler}
             ></input>
           </div>
           <div>
@@ -69,17 +106,29 @@ function SortOption({ label, field }: { label: string; field: string }) {
 
 function OperatorSelect({
   onChange,
+  field,
+  value,
 }: {
   onChange: ChangeEventHandler<HTMLSelectElement> | undefined;
+  field: string;
+  value: string;
 }) {
   return (
     <select
       onChange={onChange}
+      value={value}
+      name={`${field}Operator`}
       className="border border-blue-400 rounded-lg p-1"
     >
-      <option value="gt">&gt;</option>
-      <option value="lt">&lt;</option>
-      <option value="equals">=</option>
+      <option value="gt">
+        &gt;
+      </option>
+      <option  value="lt">
+        &lt;
+      </option>
+      <option  value="equals">
+        =
+      </option>
     </select>
   );
 }
