@@ -7,7 +7,13 @@ import { CalendarIcon } from "../icons/calendar";
 import { ListIcon } from "../icons/list";
 import { useSelectedLayoutSegments } from "next/navigation";
 
-export function SideBar({ users }: { users: User[] }) {
+export function SideBar({
+  users,
+  selectedUserId,
+}: {
+  users: User[];
+  selectedUserId?: string | null;
+}) {
   return (
     <aside className="flex flex-col border-r border-blue-500 content-start w-48 p-4 h-full min-h-full">
       <nav className="flex-1 flex flex-col">
@@ -27,7 +33,7 @@ export function SideBar({ users }: { users: User[] }) {
           url="/applications"
         />
       </nav>
-      <UserSelect users={users} />
+      <UserSelect users={users} selectedUserId={selectedUserId} />
     </aside>
   );
 }
@@ -43,7 +49,9 @@ function SideBarNavigation({
 }) {
   const layoutSegments = useSelectedLayoutSegments();
   // naive implementation, only works with top level routes
-  const activeUrl = layoutSegments.includes(url.replace("/", "")) || (url === "/" && layoutSegments.length === 0);
+  const activeUrl =
+    layoutSegments.includes(url.replace("/", "")) ||
+    (url === "/" && layoutSegments.length === 0);
   return (
     <Link
       href={url}
@@ -62,7 +70,13 @@ interface User {
   name: string;
 }
 
-function UserSelect({ users }: { users: User[] }) {
+function UserSelect({
+  users,
+  selectedUserId,
+}: {
+  users: User[];
+  selectedUserId?: string | null;
+}) {
   const onSelect = useCallback(
     async (e: React.ChangeEvent<HTMLSelectElement>) => {
       const { value: userId } = e.target;
@@ -72,12 +86,20 @@ function UserSelect({ users }: { users: User[] }) {
   );
 
   return (
-    <select onChange={onSelect}>
-      {users.map((x) => (
-        <option key={x.id} value={x.id}>
-          {x.name}
-        </option>
-      ))}
-    </select>
+    <>
+      <label>Signed in User</label>
+      <select
+        className="border "
+        onChange={onSelect}
+        value={selectedUserId || ""}
+      >
+        <option value={""}></option>
+        {users.map((x) => (
+          <option key={x.id} value={x.id}>
+            {x.name}
+          </option>
+        ))}
+      </select>
+    </>
   );
 }

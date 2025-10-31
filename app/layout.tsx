@@ -37,12 +37,15 @@ export default async function RootLayout({
       >
         <ErrorBoundary>
           <div className="flex h-screen max-h-screen min-w-full items-center justify-center bg-zinc-50 font-sans ">
-            <SideBar users={users} />
+            <SideBar users={users} selectedUserId={currentUserId} />
             <main className="flex flex-1 h-screen max-h-screen overflow-auto min-h-screen  flex-col items-center justify-between py-4 px-16 bg-white sm:items-start">
               {!!currentUserId ? (
                 children
               ) : (
-                <div>Please select a user to sign in.</div>
+                <div>
+                  Please select a user using the drop-down in the bottom left
+                  corner, inside the navigation bar to simulate a sign in.
+                </div>
               )}
             </main>
           </div>
